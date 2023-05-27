@@ -1,4 +1,4 @@
-package com.pnoni.hellospringbatch;
+package com.pnoni.batch.hello;
 
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
