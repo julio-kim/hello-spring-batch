@@ -29,4 +29,4 @@ $ h2.bat
 
 ### I-3. Batch 실행
 
-* [HelloSpringBatchApplication](/julio-kim/hello-spring-batch/blob/main/src/main/java/com/pnoni/batch/hello/HelloSpringBatchApplication.java) 을 실행하여 배치를 구동한다.
+* [HelloSpringBatchApplication](/src/main/java/com/pnoni/batch/hello/HelloSpringBatchApplication.java) 을 실행하여 배치를 구동한다.
