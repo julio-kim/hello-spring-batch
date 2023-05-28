@@ -3,6 +3,8 @@ package com.pnoni.batch.hello.job;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameter;
+import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -29,8 +31,16 @@ public class HelloJobConfiguration {
     public Step helloStep1() {
         return stepBuilderFactory.get("helloStep1")
                 .tasklet((stepContribution, chunkContext) -> {
+                    JobParameters params = stepContribution
+                            .getStepExecution()
+                            .getJobParameters();
                     log.info("====================");
                     log.info("Hello Spring Batch 1");
+                    log.info("--------------------");
+                    log.info("name: {}", params.getString("name"));
+                    log.info("seq: {}", params.getLong("seq"));
+                    log.info("date: {}", params.getDate("date"));
+                    log.info("score: {}", params.getDouble("score"));
                     log.info("====================");
                     return RepeatStatus.FINISHED;
                 })
