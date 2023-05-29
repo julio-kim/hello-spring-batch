@@ -3,7 +3,6 @@ package com.pnoni.batch.hello.job;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -24,6 +23,7 @@ public class HelloJobConfiguration {
         return jobBuilderFactory.get("helloJob")
                 .start(helloStep1())
                 .next(helloStep2())
+                .next(helloStep3())
                 .build();
     }
 
@@ -53,6 +53,19 @@ public class HelloJobConfiguration {
                 .tasklet((stepContribution, chunkContext) -> {
                     log.info("====================");
                     log.info("Hello Spring Batch 2");
+                    log.info("====================");
+//                    throw new RuntimeException("helloStep2 is failed");
+                    return RepeatStatus.FINISHED;
+                })
+                .build();
+    }
+
+    @Bean
+    public Step helloStep3() {
+        return stepBuilderFactory.get("helloStep3")
+                .tasklet((stepContribution, chunkContext) -> {
+                    log.info("====================");
+                    log.info("Hello Spring Batch 3");
                     log.info("====================");
                     return RepeatStatus.FINISHED;
                 })
