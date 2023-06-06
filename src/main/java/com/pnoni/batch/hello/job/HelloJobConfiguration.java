@@ -7,9 +7,12 @@ import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,6 +45,16 @@ public class HelloJobConfiguration {
                     log.info("date: {}", params.getDate("date"));
                     log.info("score: {}", params.getDouble("score"));
                     log.info("====================");
+
+                    ExecutionContext jobContext = stepContribution.getStepExecution().getJobExecution().getExecutionContext();
+                    ExecutionContext stepContext = stepContribution.getStepExecution().getExecutionContext();
+
+                    String jobName = stepContribution.getStepExecution().getJobExecution().getJobInstance().getJobName();
+                    String stepName = stepContribution.getStepExecution().getStepName();
+
+                    jobContext.putString("jobName", jobName);
+                    stepContext.putString("stepName", stepName);
+
                     return RepeatStatus.FINISHED;
                 })
                 .build();
@@ -53,8 +66,23 @@ public class HelloJobConfiguration {
                 .tasklet((stepContribution, chunkContext) -> {
                     log.info("====================");
                     log.info("Hello Spring Batch 2");
+                    log.info("--------------------");
+
+                    ExecutionContext jobContext = stepContribution.getStepExecution().getJobExecution().getExecutionContext();
+                    ExecutionContext stepContext = stepContribution.getStepExecution().getExecutionContext();
+
+                    log.info("jobName: {}", jobContext.get("jobName"));
+                    log.info("stepName: {}", stepContext.get("stepName"));
+
+                    Optional.ofNullable(jobContext.get("check")).ifPresentOrElse(
+                            check -> log.info("Check: {}", check),
+                            () -> {
+                                jobContext.putString("check", "YES");
+                                throw new RuntimeException("Check is not exists...");
+                            }
+                    );
                     log.info("====================");
-//                    throw new RuntimeException("helloStep2 is failed");
+
                     return RepeatStatus.FINISHED;
                 })
                 .build();
@@ -66,6 +94,15 @@ public class HelloJobConfiguration {
                 .tasklet((stepContribution, chunkContext) -> {
                     log.info("====================");
                     log.info("Hello Spring Batch 3");
+                    log.info("--------------------");
+
+                    ExecutionContext jobContext = stepContribution.getStepExecution().getJobExecution().getExecutionContext();
+                    ExecutionContext stepContext = stepContribution.getStepExecution().getExecutionContext();
+
+                    log.info("jobName: {}", jobContext.get("jobName"));
+                    log.info("stepName: {}", stepContext.get("stepName"));
+                    log.info("check: {}", jobContext.get("check"));
+
                     log.info("====================");
                     return RepeatStatus.FINISHED;
                 })
