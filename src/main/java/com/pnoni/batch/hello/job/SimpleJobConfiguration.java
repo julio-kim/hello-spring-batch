@@ -13,24 +13,24 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
-public class HelloJobConfiguration {
+public class SimpleJobConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public Job helloJob() {
-        return jobBuilderFactory.get("helloJob")
-                .start(helloStep1())
-                .next(helloStep2())
+    public Job simpleJob() {
+        return jobBuilderFactory.get("simpleJob")
+                .start(simpleStep1())
+                .next(simpleStep2())
                 .build();
     }
 
     @Bean
-    public Step helloStep1() {
-        return stepBuilderFactory.get("helloStep1")
+    public Step simpleStep1() {
+        return stepBuilderFactory.get("simpleStep1")
                 .tasklet((stepContribution, chunkContext) -> {
                     log.info("====================");
-                    log.info("Hello Spring Batch 1");
+                    log.info("Simple Spring Batch 1");
                     log.info("====================");
 
                     return RepeatStatus.FINISHED;
@@ -39,11 +39,11 @@ public class HelloJobConfiguration {
     }
 
     @Bean
-    public Step helloStep2() {
-        return stepBuilderFactory.get("helloStep2")
+    public Step simpleStep2() {
+        return stepBuilderFactory.get("simpleStep2")
                 .tasklet((stepContribution, chunkContext) -> {
                     log.info("====================");
-                    log.info("Hello Spring Batch 2");
+                    log.info("Simple Spring Batch 2");
                     log.info("====================");
 
                     return RepeatStatus.FINISHED;
