@@ -45,6 +45,7 @@ public class HelloJobConfiguration {
                     log.info("====================");
                     log.info("Hello Spring Batch 2");
                     log.info("====================");
+//                    throw new RuntimeException("helloStep2 is failed...");
 
                     return RepeatStatus.FINISHED;
                 })
