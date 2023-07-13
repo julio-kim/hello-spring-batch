@@ -5,13 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,13 +21,6 @@ public class SimpleJobConfiguration {
         return jobBuilderFactory.get("simpleJob")
                 .start(simpleStep1())
                 .next(simpleStep2())
-//                .incrementer(jobParameters ->
-//                        new JobParametersBuilder().addString(
-//                            "run.id",
-//                            LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-hhmmss"))
-//                        ).toJobParameters()
-//                )
-                .incrementer(new RunIdIncrementer())
                 .build();
     }
 
@@ -45,6 +34,7 @@ public class SimpleJobConfiguration {
 
                     return RepeatStatus.FINISHED;
                 })
+                .allowStartIfComplete(true)
                 .build();
     }
 
@@ -55,9 +45,10 @@ public class SimpleJobConfiguration {
                     log.info("====================");
                     log.info("Simple Spring Batch 2");
                     log.info("====================");
-
-                    return RepeatStatus.FINISHED;
+                    throw new RuntimeException("simpleStep2 is failed..");
+//                    return RepeatStatus.FINISHED;
                 })
+                .startLimit(3)
                 .build();
     }
 }
