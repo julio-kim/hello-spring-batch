@@ -9,6 +9,8 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,16 +43,14 @@ public class FlatFileJobConfiguration {
 
     @Bean
     public ItemReader<Employee> filatFileItemReader() {
-        FlatFileItemReader<Employee> itemReader = new FlatFileItemReader<>();
-        itemReader.setResource(new ClassPathResource("template/employee.csv"));
-
-        DefaultLineMapper<Employee> lineMapper = new DefaultLineMapper<>();
-        lineMapper.setLineTokenizer(new DelimitedLineTokenizer());
-        lineMapper.setFieldSetMapper(new EmployeeFieldSetMapper());
-
-        itemReader.setLineMapper(lineMapper);
-        itemReader.setLinesToSkip(1);
-
-        return itemReader;
+        return new FlatFileItemReaderBuilder<Employee>()
+                .name("flatFile")
+                .resource(new ClassPathResource("template/employee.csv"))
+                .fieldSetMapper(new BeanWrapperFieldSetMapper<>())
+                .targetType(Employee.class)
+                .linesToSkip(1)
+                .delimited().delimiter(",")
+                .names("id", "firstname", "lastname", "email", "job")
+                .build();
     }
 }
