@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.pnoni</groupId>
 	<artifactId>hello-spring-batch </artifactId>
-	<version>3.7.0</version>
+	<version>3.8.0</version>
 	<name>hello-spring-batch</name>
 	<description>Demo project for Spring Batch</description>
 	<properties>
@@ -24,6 +24,17 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.5.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>3.0.2</version>
 		</dependency>
 
 		<dependency>
