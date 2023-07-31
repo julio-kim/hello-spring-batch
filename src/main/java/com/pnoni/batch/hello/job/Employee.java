@@ -4,15 +4,21 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.*;
+
+@Entity
 @Getter @Setter @ToString
 public class Employee {
-    private long id;
+    @Id @GeneratedValue
+    private Long id;
     private String firstname;
     private String lastname;
     private String email;
     private String job;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private String language;
+    @Enumerated(EnumType.STRING)
     private ShirtSize shirtSize;
 
     public enum Gender {
