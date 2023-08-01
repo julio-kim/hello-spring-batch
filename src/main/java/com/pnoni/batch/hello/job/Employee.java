@@ -1,12 +1,14 @@
 package com.pnoni.batch.hello.job;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor
 @Getter @Setter @ToString
 public class Employee {
     @Id @GeneratedValue
@@ -20,6 +22,12 @@ public class Employee {
     private String language;
     @Enumerated(EnumType.STRING)
     private ShirtSize shirtSize;
+
+    public Employee(Long id, String firstname, String lastname) {
+        this.id = id;
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
 
     public enum Gender {
         Male, Female
