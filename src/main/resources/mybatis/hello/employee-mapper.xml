@@ -2,11 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "HTTP://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pnoni.batch.hello.job.Employee">
-    <select id="selectEmployees" resultType="Employee">
+    <sql id="sqlEmployees">
         select *
           from employee
          where gender = #{gender}
            and shirt_size = #{shirtSize}
         order by lastname, firstname
+    </sql>
+
+    <select id="selectEmployees" resultType="Employee">
+        <include refid="sqlEmployees" />
+    </select>
+
+    <select id="selectPagedEmployees" resultType="Employee">
+        <include refid="sqlEmployees" />
+        limit #{_pagesize} offset ${_skiprows}
     </select>
 </mapper>
