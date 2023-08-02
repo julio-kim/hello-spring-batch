@@ -1,5 +1,8 @@
 package com.pnoni.batch.hello.job;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class EmployeeService {
     private static Long count = 0L;
     public Employee getEmployee() {

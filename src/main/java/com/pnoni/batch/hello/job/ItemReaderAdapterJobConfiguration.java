@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 public class ItemReaderAdapterJobConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
+    private final EmployeeService employeeService;
 
     @Bean
     public Job itemReaderAdapterJob() {
@@ -38,13 +39,13 @@ public class ItemReaderAdapterJobConfiguration {
     @Bean
     public ItemReader<Employee> itemReaderAdapter() {
         ItemReaderAdapter<Employee> reader = new ItemReaderAdapter<>();
-        reader.setTargetObject(employeeService());
+        reader.setTargetObject(employeeService);
         reader.setTargetMethod("getEmployee");
         return reader;
     }
 
-    @Bean
-    public EmployeeService employeeService() {
-        return new EmployeeService();
-    }
+//    @Bean
+//    public EmployeeService employeeService() {
+//        return new EmployeeService();
+//    }
 }
