@@ -7,15 +7,21 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.Order;
 import org.springframework.batch.item.database.PagingQueryProvider;
+import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import javax.sql.DataSource;
+import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +45,7 @@ public class JdbcPagingJobConfiguration {
         return stepBuilderFactory.get("jdbcPagingStep")
                 .<Employee, Employee>chunk(10)
                 .reader(jdbcPagingReader())
-                .writer(employees -> employees.forEach(employee -> log.info("Employee: {}", employee)))
+                .writer(jdbcItemWriter())
                 .build();
     }
 
@@ -71,5 +77,17 @@ public class JdbcPagingJobConfiguration {
         provider.setSortKeys(sortKeys);
 
         return provider.getObject();
+    }
+
+    @Bean
+    public ItemWriter<Employee> jdbcItemWriter() {
+        return new JdbcBatchItemWriterBuilder<Employee>()
+                .dataSource(dataSource)
+                .sql("insert into employee_new " +
+                        "(id, firstname, lastname, email, job, language) " +
+                        "values " +
+                        "(:id, :firstname, :lastname, :email, :job, :language)")
+                .beanMapped()
+                .build();
     }
 }

@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.pnoni</groupId>
 	<artifactId>hello-spring-batch </artifactId>
-	<version>3.13.0</version>
+	<version>3.14.0</version>
 	<name>hello-spring-batch</name>
 	<description>Demo project for Spring Batch</description>
 	<properties>
