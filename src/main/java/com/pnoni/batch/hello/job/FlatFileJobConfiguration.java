@@ -10,11 +10,13 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 
 import java.util.List;
 
@@ -36,13 +38,13 @@ public class FlatFileJobConfiguration {
     public Step flatFileStep() {
         return stepBuilderFactory.get("flatFileStep")
                 .<Employee, Employee>chunk(5)
-                .reader(filatFileItemReader())
-                .writer(items -> log.info("Items: {}", items))
+                .reader(flatFileItemReader())
+                .writer(flatFileItemWriter())
                 .build();
     }
 
     @Bean
-    public ItemReader<Employee> filatFileItemReader() {
+    public ItemReader<Employee> flatFileItemReader() {
         return new FlatFileItemReaderBuilder<Employee>()
                 .name("flatFile")
                 .resource(new ClassPathResource("template/employee.csv"))
@@ -50,6 +52,18 @@ public class FlatFileJobConfiguration {
                 .targetType(Employee.class)
                 .linesToSkip(1)
                 .delimited().delimiter(",")
+                .names("id", "firstname", "lastname", "email", "job")
+                .build();
+    }
+
+    @Bean
+    public ItemWriter<Employee> flatFileItemWriter() {
+        return new FlatFileItemWriterBuilder<Employee>()
+                .name("flatFileWriter")
+                .resource(new FileSystemResource("target/employee.psv"))
+                .append(true)
+                .shouldDeleteIfEmpty(true)
+                .delimited().delimiter("|")
                 .names("id", "firstname", "lastname", "email", "job")
                 .build();
     }
