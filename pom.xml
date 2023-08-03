@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.pnoni</groupId>
 	<artifactId>hello-spring-batch </artifactId>
-	<version>3.15.0</version>
+	<version>3.16.0</version>
 	<name>hello-spring-batch</name>
 	<description>Demo project for Spring Batch</description>
 	<properties>
@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
-			<version>3.0.2</version>
+			<version>2.1.1</version>
 		</dependency>
 
 		<dependency>

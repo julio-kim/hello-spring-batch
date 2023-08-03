@@ -24,7 +24,7 @@ public class EmployeeNew {
     private Employee.ShirtSize shirtSize;
 
     public EmployeeNew(Employee employee) {
-//        this.id = employee.getId();
+        this.id = employee.getId();
         this.firstname = employee.getFirstname();
         this.lastname = employee.getLastname();
         this.email = employee.getEmail();

@@ -18,4 +18,9 @@
         <include refid="sqlEmployees" />
         limit #{_pagesize} offset ${_skiprows}
     </select>
+
+    <insert id="insertEmployeeNew">
+        insert into employee_new (id, firstname, lastname, email, job, language)
+        values (#{id}, #{firstname}, #{lastname}, #{email}, #{job}, #{language})
+    </insert>
 </mapper>
