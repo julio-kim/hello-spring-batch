@@ -6,8 +6,11 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.adapter.ItemReaderAdapter;
+import org.springframework.batch.item.adapter.ItemWriterAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,9 +33,10 @@ public class ItemReaderAdapterJobConfiguration {
     @Bean
     public Step itemReaderAdapterStep() {
         return stepBuilderFactory.get("itemReaderAdapterStep")
-                .<Employee, Employee>chunk(10)
+                .<Employee, EmployeeNew>chunk(10)
                 .reader(itemReaderAdapter())
-                .writer(employees -> employees.forEach(employee -> log.info("Employee: {}", employee)))
+                .processor(adapterItemProcessor())
+                .writer(itemWriterAdapter())
                 .build();
     }
 
@@ -44,8 +48,17 @@ public class ItemReaderAdapterJobConfiguration {
         return reader;
     }
 
-//    @Bean
-//    public EmployeeService employeeService() {
-//        return new EmployeeService();
-//    }
+    @Bean
+    public ItemProcessor<Employee, EmployeeNew> adapterItemProcessor() {
+        return EmployeeNew::new;
+    }
+
+    @Bean
+    public ItemWriter<EmployeeNew> itemWriterAdapter() {
+        ItemWriterAdapter<EmployeeNew> writer = new ItemWriterAdapter<>();
+        writer.setTargetObject(employeeService);
+        writer.setTargetMethod("setEmployee");
+        return writer;
+    }
+
 }
